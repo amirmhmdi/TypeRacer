@@ -1,0 +1,151 @@
+:root {
+  --type-racer-orange: #ff8400;
+  --type-racer-dark: #1f1f1f;
+  --type-racer-soft: #f7f7f7;
+  --type-racer-border: #e7e7e7;
+  --type-racer-shadow: rgba(255, 132, 0, 0.28);
+}
+
+body {
+  font-family: "Nunito", sans-serif;
+  background: linear-gradient(180deg, #ffffff 0%, #fff8f0 100%);
+  color: var(--type-racer-dark);
+}
+
+h1,
+h2,
+.card-title {
+  font-family: "Alegreya", serif;
+}
+
+.hero-header {
+  background: var(--type-racer-orange);
+}
+
+.hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-header .container {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.hero-button {
+  color: var(--type-racer-orange);
+  font-weight: 700;
+  border: 1px solid rgba(255, 132, 0, 0.18);
+  padding-inline: 1.5rem;
+  background: linear-gradient(180deg, #fff8f0 0%, #fff1df 100%);
+  box-shadow: 0 0.75rem 1.5rem rgba(255, 132, 0, 0.14);
+}
+
+.game-panel {
+  background: #ffffff;
+}
+
+.diff-label {
+  background: #e9ecef;
+  border-color: var(--type-racer-border);
+  color: #555;
+  min-width: 170px;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.diff-select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.diff-select,
+.sample-text,
+.typing-area {
+  border-color: var(--type-racer-border);
+}
+
+.sample-text {
+  background: var(--type-racer-soft);
+  resize: none;
+  width: 100%;
+}
+
+.typing-area {
+  resize: vertical;
+  min-height: 220px;
+  width: 100%;
+}
+
+.action-btn {
+  min-width: 110px;
+  border-radius: 0;
+  font-weight: 700;
+  background: transparent;
+  color: var(--type-racer-dark);
+  border: 1px solid #000;
+  box-shadow: 0 0.75rem 1.5rem var(--type-racer-shadow);
+}
+
+.action-btn:hover,
+.action-btn:focus {
+  background: rgba(255, 255, 255, 0.45);
+  color: var(--type-racer-dark);
+}
+
+.results-card {
+  box-shadow: 0 1rem 2rem var(--type-racer-shadow);
+  border: 1px solid rgba(255, 132, 0, 0.12);
+  background: linear-gradient(180deg, #ffffff 0%, #fffaf3 100%);
+}
+
+.results-card .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.results-card .card-title {
+  color: var(--type-racer-orange);
+  font-size: 2rem;
+}
+
+.result-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 1.05rem;
+}
+
+.result-item:last-child {
+  border-bottom: 0;
+}
+
+.result-label {
+  font-weight: 700;
+}
+
+.result-value {
+  font-weight: 600;
+}
+
+@media (max-width: 767.98px) {
+  .diff-label {
+    min-width: 140px;
+  }
+
+  .hero-button {
+    width: 100%;
+    max-width: 220px;
+  }
+
+  .action-btn {
+    flex: 1 1 100%;
+  }
+}
