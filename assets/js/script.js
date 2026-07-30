@@ -1,10 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
     const difficultySelect = document.getElementById("difficultySelect");
     const sampleTextArea = document.getElementById("sampleText");
+    const startButton = document.getElementById("startBtn");
+    const stopButton = document.getElementById("stopBtn");
+    const retryButton = document.getElementById("retryBtn");
+    const levelResult = document.getElementById("levelResult");
+    const timeResult = document.getElementById("timeResult");
+    const wpmResult = document.getElementById("wpmResult");
+    const typingArea = document.getElementById("typingArea");
 
-    if (!difficultySelect || !sampleTextArea) {
+    if (!difficultySelect || !sampleTextArea || !startButton || !stopButton || !retryButton || !levelResult || !timeResult || !wpmResult || !typingArea) {
         return;
     }
+
+    const testState = {
+        startTime: null,
+        timerId: null,
+        isRunning: false,
+    };
 
     const textPool = {
         easy: [
@@ -40,8 +53,130 @@ document.addEventListener("DOMContentLoaded", () => {
         const options = textPool[difficultyKey];
         const randomIndex = Math.floor(Math.random() * options.length);
         sampleTextArea.value = options[randomIndex];
+        updateDifficultyDisplay();
+    };
+
+    const updateDifficultyDisplay = () => {
+        const difficultyKey = getDifficultyKey();
+        levelResult.textContent = `${difficultyKey.charAt(0).toUpperCase()}${difficultyKey.slice(1)}`;
+    };
+
+    const formatElapsedTime = (elapsedMilliseconds) => {
+        return (elapsedMilliseconds / 1000).toFixed(2);
+    };
+
+    const updateTimeDisplay = (elapsedMilliseconds) => {
+        timeResult.textContent = `${formatElapsedTime(elapsedMilliseconds)}s`;
+    };
+
+    const updateWpmDisplay = (wpm) => {
+        wpmResult.textContent = String(wpm);
+    };
+
+    const setButtonState = (isRunning) => {
+        startButton.disabled = isRunning;
+        stopButton.disabled = !isRunning;
+    };
+
+    const setTypingAreaState = (isEnabled) => {
+        typingArea.disabled = !isEnabled;
+    };
+
+    const clearRunningTimer = () => {
+        if (testState.timerId) {
+            window.clearInterval(testState.timerId);
+            testState.timerId = null;
+        }
+    };
+
+    const splitWords = (text) => {
+        return text.trim().length === 0 ? [] : text.trim().split(/\s+/);
+    };
+
+    const normalizeWord = (word) => {
+        return word.trim().toLowerCase();
+    };
+
+    const calculateCorrectWordCount = (sampleText, typedText) => {
+        const sampleWords = splitWords(sampleText);
+        const typedWords = splitWords(typedText);
+        const maximumWords = Math.min(sampleWords.length, typedWords.length);
+        let correctWordCount = 0;
+
+        for (let index = 0; index < maximumWords; index += 1) {
+            if (normalizeWord(sampleWords[index]) === normalizeWord(typedWords[index])) {
+                correctWordCount += 1;
+            }
+        }
+
+        return correctWordCount;
+    };
+
+    const calculateWpm = (correctWordCount, elapsedMilliseconds) => {
+        if (elapsedMilliseconds <= 0) {
+            return 0;
+        }
+
+        const elapsedMinutes = elapsedMilliseconds / 60000;
+        return Math.round(correctWordCount / elapsedMinutes);
+    };
+
+    const startTest = () => {
+        if (testState.isRunning) {
+            return;
+        }
+
+        testState.isRunning = true;
+        testState.startTime = Date.now();
+        typingArea.value = "";
+        setTypingAreaState(true);
+        updateTimeDisplay(0);
+        setButtonState(true);
+        typingArea.focus();
+
+        clearRunningTimer();
+        testState.timerId = window.setInterval(() => {
+            const elapsedMilliseconds = Date.now() - testState.startTime;
+            updateTimeDisplay(elapsedMilliseconds);
+        }, 10);
+    };
+
+    const stopTest = () => {
+        if (!testState.isRunning) {
+            return;
+        }
+
+        const elapsedMilliseconds = Date.now() - testState.startTime;
+        const correctWordCount = calculateCorrectWordCount(sampleTextArea.value, typingArea.value);
+        const wpm = calculateWpm(correctWordCount, elapsedMilliseconds);
+        clearRunningTimer();
+        updateTimeDisplay(elapsedMilliseconds);
+        updateWpmDisplay(wpm);
+        testState.isRunning = false;
+        testState.startTime = null;
+        setButtonState(false);
+        setTypingAreaState(false);
+    };
+
+    const resetTest = () => {
+        clearRunningTimer();
+        testState.isRunning = false;
+        testState.startTime = null;
+        typingArea.value = "";
+        setTypingAreaState(false);
+        updateTimeDisplay(0);
+        updateWpmDisplay(0);
+        setButtonState(false);
     };
 
     difficultySelect.addEventListener("change", renderSampleText);
+    startButton.addEventListener("click", startTest);
+    stopButton.addEventListener("click", stopTest);
+    retryButton.addEventListener("click", resetTest);
     renderSampleText();
+    updateTimeDisplay(0);
+    updateWpmDisplay(0);
+    updateDifficultyDisplay();
+    setButtonState(false);
+    setTypingAreaState(false);
 });
