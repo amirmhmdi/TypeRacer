@@ -115,6 +115,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
+    const handleTypingInput = () => {
+        if (!testState.isRunning && typingArea.value.trim().length > 0) {
+            startTest();
+        }
+
+        updateWordHighlighting();
+    };
+
     const setButtonState = (isRunning) => {
         startButton.disabled = isRunning;
         stopButton.disabled = !isRunning;
@@ -170,7 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         testState.isRunning = true;
         testState.startTime = Date.now();
-        typingArea.value = "";
         setTypingAreaState(true);
         updateTimeDisplay(0);
         setButtonState(true);
@@ -200,20 +207,36 @@ document.addEventListener("DOMContentLoaded", () => {
         setTypingAreaState(false);
     };
 
+    const handleTypingKeydown = (event) => {
+        if (event.key !== "Enter") {
+            return;
+        }
+
+        event.preventDefault();
+
+        if (testState.isRunning) {
+            stopTest();
+        }
+    };
+
     const resetTest = () => {
         clearRunningTimer();
         testState.isRunning = false;
         testState.startTime = null;
         typingArea.value = "";
-        setTypingAreaState(false);
+        setTypingAreaState(true);
         updateTimeDisplay(0);
         updateWpmDisplay(0);
         setButtonState(false);
+        clearWordHighlighting();
     };
 
     difficultySelect.addEventListener("change", renderSampleText);
-    typingArea.addEventListener("input", updateWordHighlighting);
-    startButton.addEventListener("click", startTest);
+    typingArea.addEventListener("input", handleTypingInput);
+    typingArea.addEventListener("keydown", handleTypingKeydown);
+    startButton.addEventListener("click", () => {
+        typingArea.focus();
+    });
     stopButton.addEventListener("click", stopTest);
     retryButton.addEventListener("click", resetTest);
     renderSampleText();
@@ -221,6 +244,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateWpmDisplay(0);
     updateDifficultyDisplay();
     setButtonState(false);
-    setTypingAreaState(false);
+    setTypingAreaState(true);
     clearWordHighlighting();
 });

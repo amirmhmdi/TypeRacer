@@ -18,7 +18,7 @@
     <header class="hero-header text-center text-white">
         <div class="container py-5 my-2 hero-inner">
             <h1 class="display-3 fw-bold mb-3 mb-md-4">Type Racer</h1>
-            <button type="button" class="btn btn-lg hero-button">
+            <button type="button" class="btn btn-lg hero-button" data-bs-toggle="modal" data-bs-target="#instructionsModal">
                 <i class="fa-solid fa-circle-info me-2"></i>Instruction
             </button>
         </div>
@@ -47,7 +47,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <textarea id="typingArea" class="form-control typing-area" rows="7" placeholder="click the Start button to begin the test"></textarea>
+                        <textarea id="typingArea" class="form-control typing-area" rows="7" placeholder="Start typing to begin the test"></textarea>
                     </div>
 
                     <div class="d-flex flex-wrap gap-3">
@@ -77,6 +77,22 @@
             </section>
         </div>
     </main>
+
+    <div class="modal fade" id="instructionsModal" tabindex="-1" aria-labelledby="instructionsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-4" id="instructionsModalLabel">Instructions</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-3">Choose a difficulty level, then start typing the sample text. The timer begins as soon as you type your first character.</p>
+                    <p class="mb-3">Press Enter to finish the test. Correct words turn blue and incorrect words turn red while you type.</p>
+                    <p class="mb-0">Use Retry to clear the test and try again.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
