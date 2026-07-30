@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         startTime: null,
         timerId: null,
         isRunning: false,
+        sampleText: "",
     };
 
     const textPool = {
@@ -52,8 +53,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const difficultyKey = getDifficultyKey();
         const options = textPool[difficultyKey];
         const randomIndex = Math.floor(Math.random() * options.length);
-        sampleTextArea.value = options[randomIndex];
+        testState.sampleText = options[randomIndex];
+        renderSampleTextWords(testState.sampleText);
         updateDifficultyDisplay();
+    };
+
+    const renderSampleTextWords = (sampleText) => {
+        const words = splitWords(sampleText);
+        sampleTextArea.innerHTML = words
+            .map((word, index) => `<span class="sample-word" data-word-index="${index}">${word}</span>`)
+            .join(" ");
     };
 
     const updateDifficultyDisplay = () => {
@@ -71,6 +80,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const updateWpmDisplay = (wpm) => {
         wpmResult.textContent = String(wpm);
+    };
+
+    const getTypedWords = () => {
+        return splitWords(typingArea.value);
+    };
+
+    const clearWordHighlighting = () => {
+        sampleTextArea.querySelectorAll(".sample-word").forEach((wordElement) => {
+            wordElement.classList.remove("correct", "incorrect");
+        });
+    };
+
+    const updateWordHighlighting = () => {
+        const typedWords = getTypedWords();
+        const sampleWords = splitWords(testState.sampleText);
+        const wordElements = sampleTextArea.querySelectorAll(".sample-word");
+
+        wordElements.forEach((wordElement, index) => {
+            wordElement.classList.remove("correct", "incorrect");
+
+            if (index >= typedWords.length) {
+                return;
+            }
+
+            const typedWord = normalizeWord(typedWords[index]);
+            const sampleWord = normalizeWord(sampleWords[index] || "");
+
+            if (typedWord === sampleWord) {
+                wordElement.classList.add("correct");
+            } else {
+                wordElement.classList.add("incorrect");
+            }
+        });
     };
 
     const setButtonState = (isRunning) => {
@@ -147,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const elapsedMilliseconds = Date.now() - testState.startTime;
-        const correctWordCount = calculateCorrectWordCount(sampleTextArea.value, typingArea.value);
+        const correctWordCount = calculateCorrectWordCount(testState.sampleText, typingArea.value);
         const wpm = calculateWpm(correctWordCount, elapsedMilliseconds);
         clearRunningTimer();
         updateTimeDisplay(elapsedMilliseconds);
@@ -170,6 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     difficultySelect.addEventListener("change", renderSampleText);
+    typingArea.addEventListener("input", updateWordHighlighting);
     startButton.addEventListener("click", startTest);
     stopButton.addEventListener("click", stopTest);
     retryButton.addEventListener("click", resetTest);
@@ -179,4 +222,5 @@ document.addEventListener("DOMContentLoaded", () => {
     updateDifficultyDisplay();
     setButtonState(false);
     setTypingAreaState(false);
+    clearWordHighlighting();
 });
