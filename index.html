@@ -32,7 +32,7 @@
                     <div class="mb-3">
                         <div class="input-group input-group-lg">
                             <span class="input-group-text diff-label">Select Difficulty</span>
-                            <select class="form-select diff-select" aria-label="Select Difficulty">
+                            <select id="difficultySelect" class="form-select diff-select" aria-label="Select Difficulty">
                                 <option selected>Easy</option>
                                 <option value="medium">Medium</option>
                                 <option value="hard">Hard</option>
@@ -44,7 +44,9 @@
 
                     <div class="mb-4">
                         <textarea id="sampleText" class="form-control sample-text" rows="4"
-                            readonly>This is a sample typing prompt designed to help you measure your typing speed and accuracy.</textarea>
+                            readonly>
+                        <!-- this text will be populated dynamically -->
+                        </textarea>
                     </div>
 
                     <div class="mb-4">
@@ -81,6 +83,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
+    <script src="assets/js/script.js"></script>
 </body>
 
 </html>
